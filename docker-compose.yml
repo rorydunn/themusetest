@@ -1,27 +1,10 @@
-version: '2'
+version: '3'
 services:
-
-  # The Application
-  app:
-    build:
-      context: ./
-      dockerfile: docker/app.dockerfile
-    container_name: themusetestapp
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
-    environment:
-      - "DB_PORT=3306"
-      - "DB_HOST=database"
-
-  # The Web Server
   web:
-    build:
-      context: ./
-      dockerfile: docker/web.dockerfile
-    container_name: themusetestweb
-    working_dir: /var/www
-    volumes_from:
-      - app
+    image: rorydunn/musechallenge
     ports:
-      - 8000:80
+      - "80:80"
+  # redis:
+  #   image: redis
+  #   ports:
+  #     - "6380:6380"

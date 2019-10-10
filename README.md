@@ -1,4 +1,4 @@
-# Muse Challenge Readme
+# TheMuse Challenge Readme
 
 ### Requirements
 * docker
