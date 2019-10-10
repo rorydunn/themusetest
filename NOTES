@@ -1,0 +1,27 @@
+Hello,
+
+Included in this repository are files that are not used in my final solution.
+I included them to give a better idea of how I came to my solution and to show
+what I was attempting to do as my solution is not ideal.
+
+Files that aren't used or aren't fully functional:
+  docker/app.dockerfile
+  docker/web.dockerfile
+  docker/vhost.conf
+  public/index.php
+  scripts/ecs_deploy_nat.sh
+  scripts/ecs_deploy_privatelink.sh
+  docker-compose.yml.txt
+
+I started with using a docker-compose file after reading about this
+https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-compose.html
+and thinking that this would be a good way to easily manage and modify a local setup
+and deploy it to ECS.  What I found after trying it out is that the docker-compose
+build flag can't be used with ECS so I realized I would need to reference a
+remote docker image.
+
+Referencing a remote docker image later became an issue when I created a new VPC
+with private subnets and used AWS PrivateLink. The containers can connect to the
+cluster but the containers can't download remote docker images. This could be
+solved by putting the images in ECR but i didn't want the user to have to store
+images in their own ECR to run this project.

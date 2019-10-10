@@ -19,12 +19,19 @@
 
 1. Clone or download this repository.
 2. From within the repository root run:
-> bash scripts/aws_deploy.sh
+> bash scripts/ecs_deploy.sh $env-name
 
 3. When the script is done it will provide an IP where the service is running.
+4. Deploying the environment in AWS with the same $env-name used before will
+replace the existing environment. Using a different $env-name will create an
+additional environment.
+
+### To add additional services:
+
+1. Add services to the docker-compose.yml file.
+2. Deploy locally or to AWS in the same manner as listed above.
 
 ### Outstanding items
-* Private subnet - need to create this not have it be automatically created.
+* Private subnet - not working correctly, discussed in NOTES file.
 * database access - need to create this in vpc
-* ability to add more services - document this
 * logging https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-logs.html?
