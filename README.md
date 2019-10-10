@@ -3,6 +3,9 @@
 ### Requirements
 * docker
 * docker-compose
+* aws-cli
+* ecs-cli
+* AWS permissions to create ECS Clusters, EC2 resources (VPCs, subnets, EC2 instances), and an RDS instance
 
 ### To run the application locally:
 
@@ -18,40 +21,10 @@
 2. From within the repository root run:
 > bash scripts/aws_deploy.sh
 
-3. Visit your site running at __________
-
-
-Basic Steps
-
-Prod/test
--create VPC (AWS CLI?)
--create security group (AWS CLI?)
-This:
-    -create task definition
-      -https://docs.aws.amazon.com/AmazonECS/latest/developerguide/example_task_definitions.html
-    -configure the service
-Or this:
-    -docker-compose-style commands
-    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-compose-service.html
--create cluster https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-up.html
--setup logging (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-logs.html?)
--deploy image to cluster
-
-How?
--two shell scripts
-    -local script takes no parameters
-    -remote script takes env name parameter (prod/test/dev/whatever)
-
+3. When the script is done it will provide an IP where the service is running.
 
 Outstanding items
--HTTP Proxy
--Private subnet
--database access
--ability to add more services
-
-
-
-
-
-Resources Used
-https://gist.github.com/cjus/1047794
+-Private subnet - need to create this not have it be automatically created.
+-database access - need to create this in vpc
+-ability to add more services - document this
+-logging https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-logs.html?
