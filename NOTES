@@ -11,6 +11,7 @@ Files that aren't used or aren't fully functional:
   public/index.php
   scripts/ecs_deploy_nat.sh
   scripts/ecs_deploy_privatelink.sh
+  scripts/rds_create.sh
   docker-compose.yml.txt
 
 I started with using a docker-compose file after reading about this
@@ -25,3 +26,26 @@ with private subnets and used AWS PrivateLink. The containers can connect to the
 cluster but the containers can't download remote docker images. This could be
 solved by putting the images in ECR but i didn't want the user to have to store
 images in their own ECR to run this project.
+This effort can be seen in the script "ecs_deploy_privatelink.sh"
+
+Next I tried creating an NAT gateway so the EC2 instances themselves wouldn't be
+publicly exposed to the internet but they could still access the internet. I had
+trouble with this, the cluster couldn't connect to the container. I feel this was
+the right approach however.
+This effort can be seen in the script "ecs_deploy_nat.sh"
+
+And finally I have my unsecure script that leaves two EC2 instances exposed
+to the internet. Not what i wanted but I did want to demonstrate deploying the service
+to ECS. Certainly by using privatelink and ECR or by fixing the NAT gateway setup
+this could have been avoided but it is what I have for now.
+This is in the script "ecs_eploy.sh"
+
+rds_create.sh was mostly used for testing.
+
+Along with what i mentioned above there are some other shortcomings:
+  Logging - logging can be enabled by uncommenting the logging section of the docker-compose
+  file however this prevents that file from being run locally.
+  Alerting - default monitoring is in place but no alarms/alerts are in place.
+  High-Availability - this is currently running in two availabilty zones but just one region.
+  Database - the VPC and security group rules for the db aren't properly setup yet.
+  The scripts - error reporting doesn't work all that well on them.
