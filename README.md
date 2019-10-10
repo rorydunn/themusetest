@@ -23,8 +23,8 @@
 
 3. When the script is done it will provide an IP where the service is running.
 
-Outstanding items
--Private subnet - need to create this not have it be automatically created.
--database access - need to create this in vpc
--ability to add more services - document this
--logging https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-logs.html?
+### Outstanding items
+* Private subnet - need to create this not have it be automatically created.
+* database access - need to create this in vpc
+* ability to add more services - document this
+* logging https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-logs.html?
