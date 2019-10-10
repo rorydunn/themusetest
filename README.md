@@ -1,9 +1,27 @@
-##Muse Challenge Readme
+# Muse Challenge Readme
+
+### Requirements
+* docker
+* docker-compose
+
+### To run the application locally:
+
+1. Clone this repo
+2. From within the project root run:
+> docker-compose up -d
+
+3. Visit your site running at localhost port 80
+
+### To run the application in AWS:
+
+1. Clone this repo
+2. From within the project root run:
+> _____________
+
+3. Visit your site running at __________
+
 
 Basic Steps
-
-Local
--Create docker image which can run locally
 
 Prod/test
 -create VPC (AWS CLI?)
@@ -32,27 +50,8 @@ Outstanding items
 -ability to add more services
 
 
-### Dependencies
 
-1. Install docker, docker-compose,
-
-### To run the application locally:
-
-1. Clone this repo
-2. From within the project root run:
-> docker-compose up -d
-
-3. Visit your site running at localhost port 80
-
-### To run the application in AWS:
-
-1. Clone this repo
-2. From within the project root run:
-> docker-compose up -d
-
-3. Visit your site running at localhost port 80
 
 
 Resources Used
 https://gist.github.com/cjus/1047794
-
