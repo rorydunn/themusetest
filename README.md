@@ -6,16 +6,16 @@
 
 ### To run the application locally:
 
-1. Clone this repo
-2. From within the project root run:
+1. Clone or download this repository.
+2. From within the repository root run:
 > docker-compose up -d
 
 3. Visit your site running at localhost port 80
 
 ### To run the application in AWS:
 
-1. Clone this repo
-2. From within the project root run:
+1. Clone or download this repository.
+2. From within the repository root run:
 > _____________
 
 3. Visit your site running at __________
