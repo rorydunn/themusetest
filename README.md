@@ -16,7 +16,7 @@
 
 1. Clone or download this repository.
 2. From within the repository root run:
-> _____________
+> bash scripts/aws_deploy.sh
 
 3. Visit your site running at __________
 
