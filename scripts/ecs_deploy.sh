@@ -82,7 +82,7 @@ ecs-cli ps --cluster-config $clusterName
 #create database
 echo 'Creating Database'
 masterpassword=$(cat /dev/urandom | env LC_CTYPE=C tr -cd 'a-f0-9' | head -c 12)
-json=$(aws rds create-db-instance \
+db=$(aws rds create-db-instance \
     --allocated-storage 20 \
     --db-instance-class db.m4.large \
     --db-instance-identifier db-$clusterName \
@@ -91,9 +91,5 @@ json=$(aws rds create-db-instance \
     --master-username master \
     --master-user-password $masterpassword \
     --multi-az)
-
-json=$(aws ecs describe-clusters --cluster $clusterName)
-prop='DBInstanceIdentifier'
-dbInstance=`jsonval`
-
-echo 'DB:' $dbInstance 'Username: master PW:' $masterpassword > rdscredentials.txt
+echo 'Database created'
+echo 'Username: master PW:' $masterpassword > rdscredentials.txt
