@@ -125,6 +125,7 @@ echo 'Creating cluster' $clusterName
 
 ecs-cli up \
   --capability-iam \
+  --keypair saleslightprod \
   --size 2 \
   --instance-type t2.medium \
   --cluster-config $clusterName \

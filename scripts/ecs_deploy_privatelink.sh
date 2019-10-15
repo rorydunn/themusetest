@@ -57,8 +57,8 @@ vpcStatus=`jsonval`
 echo 'VPC status is' $vpcStatus
 echo 'Created VPC ' $vpcId
 
-# aws ec2 modify-vpc-attribute --vpc-id $vpcId --enable-dns-support "{\"Value\":true}"
-# aws ec2 modify-vpc-attribute --vpc-id $vpcId --enable-dns-hostnames "{\"Value\":true}"
+aws ec2 modify-vpc-attribute --vpc-id $vpcId --enable-dns-support "{\"Value\":true}"
+aws ec2 modify-vpc-attribute --vpc-id $vpcId --enable-dns-hostnames "{\"Value\":true}"
 
 ## Create subnets
 echo 'Creating Subnets'
@@ -95,14 +95,29 @@ prop='RouteTableId'
 routeTableId=`jsonval`
 echo 'Created Route Table' $routeTableId
 
-# aws ec2 create-route --route-table-id rtb-033831e440e7267bf --destination-cidr-block 0.0.0.0/0 --gateway-id igw-0232d5c5f7bebe93f
-# aws ec2 create-route --route-table-id $routeTableId --destination-cidr-block 0.0.0.0/0 --gateway-id $gatewayId
-# aws ec2 describe-route-tables --route-table-id $routeTableId
-# aws ec2 associate-route-table  --subnet-id $subnetId1 --route-table-id $routeTableId
-#
-# #Create NAT Gateway
-# echo 'Creating NAT Gateway'
-# aws ec2 create-nat-gateway --subnet-id $subnetId1 --allocation-id $elasticIp
+aws ec2 create-route --route-table-id $routeTableId --destination-cidr-block 0.0.0.0/0 --gateway-id $gatewayId
+aws ec2 describe-route-tables --route-table-id $routeTableId
+aws ec2 associate-route-table  --subnet-id $subnetId1 --route-table-id $routeTableId
+
+#Create NAT Gateway
+echo 'Creating NAT Gateway'
+json=$(aws ec2 create-nat-gateway --subnet-id $subnetId1 --allocation-id $elasticIp)
+prop='NatGatewayId'
+natGateway=`jsonval`
+
+##wait for NAT Gateway to be ready
+##Create route table for private subnet
+sleep 60s
+# Create Route table
+echo 'Creating Route Table'
+json=$(aws ec2 create-route-table --vpc-id $vpcId)
+prop='RouteTableId'
+routeTableId2=`jsonval`
+echo 'Created Route Table' $routeTableId2
+
+aws ec2 create-route-table --vpc-id $vpcId
+aws ec2 create-route --route-table-id $routeTableId2 --destination-cidr-block 0.0.0.0/0 --gateway-id $natGateway
+aws ec2 associate-route-table --subnet-id $subnetId2 --route-table-id $routeTableId2
 
 ## Create security group
 echo 'Creating Security Group'
@@ -115,7 +130,10 @@ echo 'Security Group' $securityGroupId 'created'
 aws ec2 create-vpc-endpoint --vpc-id $vpcId --vpc-endpoint-type Interface --service-name com.amazonaws.us-east-1.ecs-agent --subnet-id $subnetId2 --security-group-id $securityGroupId
 aws ec2 create-vpc-endpoint --vpc-id $vpcId --vpc-endpoint-type Interface --service-name com.amazonaws.us-east-1.ecs-telemetry --subnet-id $subnetId2 --security-group-id $securityGroupId
 aws ec2 create-vpc-endpoint --vpc-id $vpcId --vpc-endpoint-type Interface --service-name com.amazonaws.us-east-1.ecs --subnet-id $subnetId2 --security-group-id $securityGroupId
+
 aws ec2 authorize-security-group-ingress --group-id $securityGroupId --protocol tcp --port 443 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id $securityGroupId --protocol tcp --port 80 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id $securityGroupId --protocol tcp --port 22 --cidr 0.0.0.0/0
 
 # Configure the cluster
 ecs-cli configure \
@@ -129,10 +147,11 @@ echo 'Creating cluster' $clusterName
 ecs-cli up \
   --capability-iam \
   --size 2 \
-  --instance-type t2.medium \
+  --keypair saleslightprod \
+  --instance-type t2.micro \
   --cluster-config $clusterName \
   --security-group $securityGroupId \
-  --subnets $subnetId1 \
+  --subnets $subnetId2 \
   --vpc $vpcId \
   --no-associate-public-ip-address \
   --launch-type EC2 \
@@ -164,6 +183,7 @@ ecs-cli compose down --cluster-config $clusterName
 
 #Start a service
 ecs-cli compose service up --cluster-config $clusterName
+# ecs-cli compose service up --cluster-config muse-test-01
 
 #Show the service is running
 ecs-cli ps --cluster-config $clusterName
